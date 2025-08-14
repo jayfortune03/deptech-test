@@ -2,14 +2,20 @@ import { IsString, IsEmail, IsNumber } from 'class-validator';
 
 export class CreateEmployeeDto {
   @IsString()
-  name: string;
+  firstName: string;
+
+  @IsString()
+  lastName: string;
 
   @IsEmail()
   email: string;
 
   @IsString()
-  position: string;
+  phoneNumber: string;
 
-  @IsNumber()
-  salary: number;
+  @IsString()
+  address: string;
+
+  @IsString()
+  gender: string;
 }
