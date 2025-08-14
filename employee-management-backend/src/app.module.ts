@@ -19,10 +19,9 @@ import * as path from 'path';
       database: process.env.DB_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
+      migrations: ['./src/migrations/*.ts'],
     }),
     AdminModule,
-    // EmployeeModule,
-    // LeaveModule,
   ],
 })
 export class AppModule {}
