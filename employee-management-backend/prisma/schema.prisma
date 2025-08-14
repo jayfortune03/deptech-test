@@ -29,10 +29,11 @@ model Employee {
 }
 
 model Leave {
-  id         Int      @id @default(autoincrement())
-  reason     String
-  startDate  DateTime
-  endDate    DateTime
-  employeeId Int
-  employee   Employee @relation(fields: [employeeId], references: [id])
+  id            Int      @id @default(autoincrement())
+  reason        String
+  startDate     DateTime
+  endDate       DateTime
+  employeeId    Int
+  totalWorkDays Int
+  employee      Employee @relation(fields: [employeeId], references: [id])
 }
