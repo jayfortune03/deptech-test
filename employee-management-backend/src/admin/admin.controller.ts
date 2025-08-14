@@ -9,7 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { Admin } from './admin.entity';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard';
@@ -19,35 +18,64 @@ import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
   @Get()
-  async findAll(): Promise<Admin[]> {
-    return this.adminService.findAll();
+  async findAll() {
+    const data = await this.adminService.findAll();
+    return {
+      status: 200,
+      message: 'success get all admins',
+      data,
+    };
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Admin> {
+  async findOne(@Param('id') id: number) {
     const parsedId = Number(id);
-    return this.adminService.findOne(parsedId);
+    const data = await this.adminService.findOne(parsedId);
+
+    return {
+      status: 200,
+      message: 'success get one admin',
+      data,
+    };
   }
 
   @Post()
-  async create(@Body() createAdminDto: CreateAdminDto): Promise<Admin> {
-    return this.adminService.create(createAdminDto);
+  async create(@Body() createAdminDto: CreateAdminDto) {
+    const data = await this.adminService.create(createAdminDto);
+
+    return {
+      status: 201,
+      message: 'success create admin',
+      data,
+    };
   }
 
   @Put(':id')
   async update(
     @Param('id') id: number,
     @Body() updateAdminDto: UpdateAdminDto,
-  ): Promise<Admin> {
+  ) {
     const parsedId = Number(id);
 
-    return this.adminService.update(parsedId, updateAdminDto);
+    const data = await this.adminService.update(parsedId, updateAdminDto);
+
+    return {
+      status: 200,
+      message: 'success update admin',
+      data,
+    };
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<void> {
+  async remove(@Param('id') id: number) {
     const parsedId = Number(id);
 
-    return this.adminService.remove(parsedId);
+    const data = await this.adminService.remove(parsedId);
+
+    return {
+      status: 200,
+      message: 'success delete admin',
+      data,
+    };
   }
 }
