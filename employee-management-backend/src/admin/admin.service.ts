@@ -1,7 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Admin } from './admin.entity';
+import * as bcrypt from 'bcryptjs';
+import { CreateAdminDto } from './dto/create-admin.dto';
+import { UpdateAdminDto } from './dto/update-admin.dto';
 
 @Injectable()
 export class AdminService {
@@ -10,24 +13,49 @@ export class AdminService {
     private adminRepository: Repository<Admin>,
   ) {}
 
-  // Fungsi untuk mendapatkan semua admin
+  async create(createAdminDto: CreateAdminDto): Promise<Admin> {
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(createAdminDto.password, salt);
+    const admin = this.adminRepository.create({
+      ...createAdminDto,
+      password: hashedPassword,
+    });
+    return this.adminRepository.save(admin);
+  }
+
   async findAll(): Promise<Admin[]> {
     return this.adminRepository.find();
   }
 
-  // Fungsi untuk membuat admin baru
-  async create(adminData: Partial<Admin>): Promise<Admin> {
-    const admin = this.adminRepository.create(adminData);
-    return this.adminRepository.save(admin);
+  async findOne(id: number): Promise<Admin> {
+    const admin = await this.adminRepository.findOne({ where: { id } });
+    if (!admin) {
+      throw new NotFoundException(`Admin with id ${id} not found`);
+    }
+
+    return admin;
   }
 
-  // Fungsi untuk update profil admin
-  async update(id: number, adminData: Partial<Admin>): Promise<Admin> {
-    await this.adminRepository.update(id, adminData);
-    return this.adminRepository.findOne(id);
+  async update(id: number, updateAdminDto: UpdateAdminDto): Promise<Admin> {
+    const admin = await this.adminRepository.findOne({ where: { id } });
+
+    if (!admin) {
+      throw new NotFoundException(`Admin with id ${id} not found`);
+    }
+
+    if (updateAdminDto.password) {
+      const salt = await bcrypt.genSalt();
+      updateAdminDto.password = await bcrypt.hash(
+        updateAdminDto.password,
+        salt,
+      );
+    }
+
+    await this.adminRepository.save({ ...admin, ...updateAdminDto });
+
+    return admin;
   }
 
-  // Fungsi untuk menghapus admin
   async remove(id: number): Promise<void> {
     await this.adminRepository.delete(id);
   }
