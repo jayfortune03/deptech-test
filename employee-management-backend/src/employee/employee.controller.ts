@@ -19,30 +19,57 @@ import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard';
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
   @Post()
-  create(@Body() dto: CreateEmployeeDto) {
-    return this.employeeService.create(dto);
+  async create(@Body() dto: CreateEmployeeDto) {
+    const data = await this.employeeService.create(dto);
+    return {
+      status: 201,
+      message: 'success create employee',
+      data,
+    };
   }
 
   @Get()
-  findAll() {
-    return this.employeeService.findAll();
+  async findAll() {
+    const data = await this.employeeService.findAll();
+    return {
+      status: 200,
+      message: 'success get all employee',
+      data,
+    };
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.employeeService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const data = await this.employeeService.findOne(id);
+    return {
+      status: 200,
+      message: 'success get one employee',
+      data,
+    };
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateEmployeeDto,
   ) {
-    return this.employeeService.update(id, dto);
+    const data = await this.employeeService.update(id, dto);
+
+    return {
+      status: 200,
+      message: 'success update employee',
+      data,
+    };
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.employeeService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const data = await this.employeeService.remove(id);
+
+    return {
+      status: 200,
+      message: 'success delete employee',
+      data,
+    };
   }
 }

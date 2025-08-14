@@ -5,6 +5,11 @@ import {
   HttpException,
 } from '@nestjs/common';
 
+export interface ErrorResponse {
+  message: string;
+  error: string;
+}
+
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
@@ -14,8 +19,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      message: (errorResponse as any).message || 'Something went wrong!',
-      error: (errorResponse as any).error || 'Internal Server Error',
+      message:
+        (errorResponse as ErrorResponse).message || 'Something went wrong!',
+      error: (errorResponse as ErrorResponse).error || 'Internal Server Error',
     });
   }
 }
