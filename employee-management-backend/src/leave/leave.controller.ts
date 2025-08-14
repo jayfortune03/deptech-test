@@ -8,11 +8,13 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  UseFilters,
 } from '@nestjs/common';
 import { LeaveService } from './leave.service';
 import { CreateLeaveDto } from './dto/create-leave.dto';
 import { UpdateLeaveDto } from './dto/update-leave.dto';
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard';
+import { HandleLeaveException } from 'src/interceptors/handleLeave.interceptor';
 
 @Controller('leave')
 @UseGuards(JwtAuthGuard)
@@ -22,6 +24,7 @@ export class LeaveController {
   @Post()
   async create(@Body() createLeaveDto: CreateLeaveDto) {
     const data = await this.leaveService.create(createLeaveDto);
+
     return {
       status: 201,
       message: 'success create leave',

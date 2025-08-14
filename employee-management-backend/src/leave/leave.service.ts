@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateLeaveDto } from './dto/create-leave.dto';
 import { UpdateLeaveDto } from './dto/update-leave.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { HandleLeaveException } from 'src/interceptors/handleLeave.interceptor';
 
 @Injectable()
 export class LeaveService {
@@ -53,7 +54,7 @@ export class LeaveService {
     const newLeaveDays = this.calculateWorkDays(startDate, endDate);
 
     if (totalLeaveDays + newLeaveDays > 12) {
-      throw new Error('Maksimal cuti dalam 1 tahun adalah 12 hari');
+      throw new HandleLeaveException('Max leave on this year is 12!', 400);
     }
   }
 
@@ -76,7 +77,10 @@ export class LeaveService {
     });
 
     if (leaves.length > 0) {
-      throw new Error('Leave are taken more than 1 in a month');
+      throw new HandleLeaveException(
+        'Leave are taken more than 1 for this month!',
+        400,
+      );
     }
   }
 
