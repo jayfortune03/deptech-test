@@ -1,0 +1,38 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String   @unique
+  birthDate DateTime
+  gender    String
+  password  String
+}
+
+model Employee {
+  id          Int     @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String  @unique
+  phoneNumber String
+  address     String
+  gender      String
+  Leave       Leave[]
+}
+
+model Leave {
+  id         Int      @id @default(autoincrement())
+  reason     String
+  startDate  DateTime
+  endDate    DateTime
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+}
