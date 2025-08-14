@@ -25,7 +25,8 @@ export class AdminController {
 
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Admin> {
-    return this.adminService.findOne(id);
+    const parsedId = Number(id);
+    return this.adminService.findOne(parsedId);
   }
 
   @Post()
@@ -38,11 +39,15 @@ export class AdminController {
     @Param('id') id: number,
     @Body() updateAdminDto: UpdateAdminDto,
   ): Promise<Admin> {
-    return this.adminService.update(id, updateAdminDto);
+    const parsedId = Number(id);
+
+    return this.adminService.update(parsedId, updateAdminDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<void> {
-    return this.adminService.remove(id);
+    const parsedId = Number(id);
+
+    return this.adminService.remove(parsedId);
   }
 }
