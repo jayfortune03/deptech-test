@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -28,9 +29,8 @@ export class AdminController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) {
-    const parsedId = Number(id);
-    const data = await this.adminService.findOne(parsedId);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const data = await this.adminService.findOne(id);
 
     return {
       status: 200,
@@ -52,12 +52,10 @@ export class AdminController {
 
   @Put(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateAdminDto: UpdateAdminDto,
   ) {
-    const parsedId = Number(id);
-
-    const data = await this.adminService.update(parsedId, updateAdminDto);
+    const data = await this.adminService.update(id, updateAdminDto);
 
     return {
       status: 200,
@@ -67,10 +65,8 @@ export class AdminController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number) {
-    const parsedId = Number(id);
-
-    const data = await this.adminService.remove(parsedId);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const data = await this.adminService.remove(id);
 
     return {
       status: 200,
