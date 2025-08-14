@@ -1,34 +1,34 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Admin } from './admin.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
 @Injectable()
 export class AdminService {
-  constructor(
-    @InjectRepository(Admin)
-    private adminRepository: Repository<Admin>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(createAdminDto: CreateAdminDto): Promise<Admin> {
+  async create(createAdminDto: CreateAdminDto) {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(createAdminDto.password, salt);
-    const admin = this.adminRepository.create({
-      ...createAdminDto,
-      password: hashedPassword,
+
+    return this.prisma.admin.create({
+      data: {
+        ...createAdminDto,
+        password: hashedPassword,
+      },
     });
-    return this.adminRepository.save(admin);
   }
 
-  async findAll(): Promise<Admin[]> {
-    return this.adminRepository.find();
+  async findAll() {
+    return this.prisma.admin.findMany();
   }
 
-  async findOne(id: number): Promise<Admin> {
-    const admin = await this.adminRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+    const admin = await this.prisma.admin.findUnique({
+      where: { id },
+    });
+
     if (!admin) {
       throw new NotFoundException(`Admin with id ${id} not found`);
     }
@@ -36,8 +36,10 @@ export class AdminService {
     return admin;
   }
 
-  async update(id: number, updateAdminDto: UpdateAdminDto): Promise<Admin> {
-    const admin = await this.adminRepository.findOne({ where: { id } });
+  async update(id: number, updateAdminDto: UpdateAdminDto) {
+    const admin = await this.prisma.admin.findUnique({
+      where: { id },
+    });
 
     if (!admin) {
       throw new NotFoundException(`Admin with id ${id} not found`);
@@ -51,12 +53,23 @@ export class AdminService {
       );
     }
 
-    await this.adminRepository.save({ ...admin, ...updateAdminDto });
-
-    return admin;
+    return this.prisma.admin.update({
+      where: { id },
+      data: updateAdminDto,
+    });
   }
 
   async remove(id: number): Promise<void> {
-    await this.adminRepository.delete(id);
+    const admin = await this.prisma.admin.findUnique({
+      where: { id },
+    });
+
+    if (!admin) {
+      throw new NotFoundException(`Admin with id ${id} not found`);
+    }
+
+    await this.prisma.admin.delete({
+      where: { id },
+    });
   }
 }
