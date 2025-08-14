@@ -5,6 +5,7 @@ import { AdminModule } from './admin/admin.module';
 import { PrismaService } from './prisma/prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { EmployeeModule } from './employee/employee.module';
+import { LeaveModule } from './leave/leave.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { EmployeeModule } from './employee/employee.module';
     AdminModule,
     AuthModule,
     EmployeeModule,
+    LeaveModule,
   ],
   providers: [PrismaService],
 })
