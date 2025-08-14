@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
-import { HandleAuthException } from 'src/interceptors/handleauth.interceptor';
+import { HandleAuthException } from 'src/interceptors/handleAuth.interceptor';
 
 @Injectable()
 export class AuthService {
