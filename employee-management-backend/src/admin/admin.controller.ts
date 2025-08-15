@@ -8,19 +8,23 @@ import {
   Put,
   UseGuards,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard';
 
-@Controller('admin')
+@Controller('admins')
 @UseGuards(JwtAuthGuard)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
   @Get()
-  async findAll() {
-    const data = await this.adminService.findAll();
+  async findAll(
+    @Query('page', ParseIntPipe) page = 1,
+    @Query('rowsPerPage', ParseIntPipe) rowsPerPage = 5,
+  ) {
+    const data = await this.adminService.findAll(page, rowsPerPage);
     return {
       status: 200,
       message: 'success get all admins',
