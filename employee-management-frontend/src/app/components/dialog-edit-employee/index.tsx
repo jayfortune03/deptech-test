@@ -2,11 +2,7 @@
 
 import axiosInstance from "@/app/lib/axios";
 import { RootState } from "@/app/store";
-import {
-  fetchEmployeesFailure,
-  fetchEmployeesStart,
-  fetchEmployeesSuccess,
-} from "@/app/store/employeeSlice";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
@@ -22,8 +18,13 @@ import * as Yup from "yup";
 import { validationSchema, validationSchemaRenderValue } from "./config";
 import { EditEmployeeDialogProps } from "./types";
 import { useEffect } from "react";
+import {
+  fetchEmployeesFailure,
+  fetchEmployeesStart,
+  fetchEmployeesSuccess,
+} from "@/app/store/employeeSlice";
 
-export default function EditUserDialog({
+export default function EditLeaveDialog({
   open,
   onClose,
   employee,

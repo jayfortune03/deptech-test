@@ -211,7 +211,7 @@ export default function EditAdminDialog({
                           label={el.label}
                           slotProps={{
                             textField: {
-                              placeholder: "Pilih tanggal",
+                              placeholder: "Pick Date",
                               fullWidth: true,
                             },
                           }}
