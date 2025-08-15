@@ -1,4 +1,11 @@
-import { IsString, IsEmail, IsDateString, IsOptional } from 'class-validator';
+import { Gender } from '@prisma/client';
+import {
+  IsString,
+  IsEmail,
+  IsDateString,
+  IsOptional,
+  IsIn,
+} from 'class-validator';
 
 export class UpdateAdminDto {
   @IsOptional()
@@ -17,9 +24,9 @@ export class UpdateAdminDto {
   @IsDateString()
   birthDate?: string;
 
-  @IsOptional()
   @IsString()
-  gender?: string;
+  @IsIn(['Male', 'Female'], { message: 'Gender must be either Male or Female' })
+  gender?: Gender;
 
   @IsOptional()
   @IsString()

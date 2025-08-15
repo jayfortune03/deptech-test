@@ -20,13 +20,43 @@ export class AdminService {
     });
   }
 
-  async findAll() {
-    return this.prisma.admin.findMany();
+  async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    const admins = await this.prisma.admin.findMany({
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        birthDate: true,
+        email: true,
+        gender: true,
+        password: false,
+      },
+    });
+
+    const totalAdmins = await this.prisma.admin.count();
+
+    return {
+      admins,
+      totalAdmins,
+    };
   }
 
   async findOne(id: number) {
     const admin = await this.prisma.admin.findUnique({
       where: { id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        birthDate: true,
+        email: true,
+        gender: true,
+        password: false,
+      },
     });
 
     if (!admin) {

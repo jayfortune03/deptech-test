@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsDateString } from 'class-validator';
+import { Gender } from '@prisma/client';
+import { IsString, IsEmail, IsDateString, IsIn } from 'class-validator';
 
 export class CreateAdminDto {
   @IsString()
@@ -14,7 +15,8 @@ export class CreateAdminDto {
   birthDate: string;
 
   @IsString()
-  gender: string;
+  @IsIn(['Male', 'Female'], { message: 'Gender must be either Male or Female' })
+  gender: Gender;
 
   @IsString()
   password: string;

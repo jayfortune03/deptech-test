@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -29,8 +30,11 @@ export class EmployeeController {
   }
 
   @Get()
-  async findAll() {
-    const data = await this.employeeService.findAll();
+  async findAll(
+    @Query('page', ParseIntPipe) page = 1,
+    @Query('rowsPerPage', ParseIntPipe) rowsPerPage = 5,
+  ) {
+    const data = await this.employeeService.findAll(page, rowsPerPage);
     return {
       status: 200,
       message: 'success get all employee',

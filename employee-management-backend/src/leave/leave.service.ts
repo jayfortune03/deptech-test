@@ -84,6 +84,36 @@ export class LeaveService {
     }
   }
 
+  private async calculateRemainingLeave(employeeId: number): Promise<number> {
+    const yearStart = new Date(new Date().getFullYear(), 0, 1);
+    const yearEnd = new Date(new Date().getFullYear(), 11, 31);
+
+    const leaves = await this.prisma.leave.findMany({
+      where: {
+        employeeId: employeeId,
+        startDate: {
+          gte: yearStart,
+        },
+        endDate: {
+          lte: yearEnd,
+        },
+      },
+    });
+
+    const totalLeaveDays = leaves.reduce((total, leave) => {
+      return (
+        total +
+        this.calculateWorkDays(
+          new Date(leave.startDate),
+          new Date(leave.endDate),
+        )
+      );
+    }, 0);
+
+    const remainingLeave = 12 - totalLeaveDays;
+    return remainingLeave;
+  }
+
   async create(createLeaveDto: CreateLeaveDto) {
     const startDate = new Date(createLeaveDto.startDate);
     const endDate = new Date(createLeaveDto.endDate);
@@ -132,6 +162,34 @@ export class LeaveService {
         employeeId: employeeId,
       },
     });
+  }
+
+  async getLeavesWithPagination(offset: number, limit: number) {
+    const leavesResult = await this.prisma.leave.findMany({
+      skip: offset,
+      take: limit,
+      include: {
+        employee: true,
+      },
+    });
+    const totalLeaves = await this.prisma.admin.count();
+
+    const leaves = await Promise.all(
+      leavesResult.map(async (leave) => {
+        const remainingLeave = await this.calculateRemainingLeave(
+          leave.employeeId,
+        );
+        return {
+          ...leave,
+          remainingLeave,
+        };
+      }),
+    );
+
+    return {
+      leaves,
+      totalLeaves,
+    };
   }
 
   async delete(id: number) {
