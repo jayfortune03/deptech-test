@@ -11,8 +11,19 @@ export class EmployeeService {
     return this.prisma.employee.create({ data: dto });
   }
 
-  async findAll() {
-    return this.prisma.employee.findMany();
+  async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const employees = await this.prisma.employee.findMany({
+      skip,
+      take: limit,
+    });
+
+    const totalEmployees = await this.prisma.employee.count();
+
+    return {
+      employees,
+      totalEmployees,
+    };
   }
 
   async findOne(id: number) {

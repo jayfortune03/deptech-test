@@ -12,7 +12,7 @@ export class AuthController {
     const { access_token } = await this.authService.login(loginDto);
 
     res.cookie('token', access_token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
       maxAge: 24 * 60 * 60 * 1000,
