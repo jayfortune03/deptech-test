@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsNumber } from 'class-validator';
+import { Gender } from '@prisma/client';
+import { IsString, IsEmail, IsIn } from 'class-validator';
 
 export class CreateEmployeeDto {
   @IsString()
@@ -17,5 +18,6 @@ export class CreateEmployeeDto {
   address: string;
 
   @IsString()
-  gender: string;
+  @IsIn(['Male', 'Female'], { message: 'Gender must be either Male or Female' })
+  gender: Gender;
 }

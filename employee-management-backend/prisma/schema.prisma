@@ -15,17 +15,21 @@ model Admin {
   birthDate DateTime
   gender    String
   password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model Employee {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   firstName   String
-  lastName    String
-  email       String  @unique
+  lastName    String?
+  email       String   @unique
   phoneNumber String
   address     String
-  gender      String
+  gender      Gender
   Leave       Leave[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
 }
 
 model Leave {
@@ -36,4 +40,11 @@ model Leave {
   employeeId    Int
   totalWorkDays Int
   employee      Employee @relation(fields: [employeeId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+}
+
+enum Gender {
+  Male
+  Female
 }
