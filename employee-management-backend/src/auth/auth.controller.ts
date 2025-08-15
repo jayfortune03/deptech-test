@@ -11,7 +11,7 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
     const { access_token } = await this.authService.login(loginDto);
 
-    res.cookie('jwt', access_token, {
+    res.cookie('token', access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
@@ -19,12 +19,12 @@ export class AuthController {
       path: '/',
     });
 
-    return res.json({ message: 'Login successful' });
+    return res.json({ status: 200, message: 'Login successful' });
   }
 
   @Post('logout')
   logout(@Res() res: Response) {
-    res.clearCookie('jwt');
-    return res.json({ message: 'Logout successful' });
+    res.clearCookie('token');
+    return res.json({ status: 200, message: 'Logout successful' });
   }
 }
