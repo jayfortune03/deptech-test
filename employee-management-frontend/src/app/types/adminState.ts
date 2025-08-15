@@ -1,10 +1,10 @@
-import { Employee } from "./employee";
+import { Admin } from "./admin";
 
-export interface EmployeeState {
-  employees: Employee[];
+export interface AdminsState {
+  admins: Admin[];
   loading: boolean;
   error: string | null;
   page: number;
   rowsPerPage: number;
-  totalEmployees: number;
+  totalAdmins: number;
 }

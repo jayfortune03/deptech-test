@@ -1,33 +1,33 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EmployeeState } from "../types/employeeState";
-import { Employee } from "../types/employee";
+import { AdminsState } from "../types/adminState";
+import { Admin } from "../types/admin";
 
-const initialState: EmployeeState = {
-  employees: [],
+const initialState: AdminsState = {
+  admins: [],
   loading: false,
   error: null,
   page: 1,
   rowsPerPage: 5,
-  totalEmployees: 0,
+  totalAdmins: 0,
 };
 
-const employeeSlice = createSlice({
-  name: "employees",
+const adminSlice = createSlice({
+  name: "admins",
   initialState,
   reducers: {
-    fetchEmployeesStart: (state) => {
+    fetchAdminsStart: (state) => {
       state.loading = true;
       state.error = null;
     },
-    fetchEmployeesSuccess: (
+    fetchAdminsSuccess: (
       state,
-      action: PayloadAction<{ employees: Employee[]; totalEmployees: number }>
+      action: PayloadAction<{ admins: Admin[]; totalAdmins: number }>
     ) => {
       state.loading = false;
-      state.employees = action.payload.employees;
-      state.totalEmployees = action.payload.totalEmployees;
+      state.admins = action.payload.admins;
+      state.totalAdmins = action.payload.totalAdmins;
     },
-    fetchEmployeesFailure: (state, action: PayloadAction<string>) => {
+    fetchAdminsFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -41,11 +41,11 @@ const employeeSlice = createSlice({
 });
 
 export const {
-  fetchEmployeesStart,
-  fetchEmployeesSuccess,
-  fetchEmployeesFailure,
+  fetchAdminsStart,
+  fetchAdminsSuccess,
+  fetchAdminsFailure,
   setPage,
   setRowsPerPage,
-} = employeeSlice.actions;
+} = adminSlice.actions;
 
-export default employeeSlice.reducer;
+export default adminSlice.reducer;

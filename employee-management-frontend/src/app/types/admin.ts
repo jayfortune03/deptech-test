@@ -1,10 +1,9 @@
-export interface Employee {
+export interface Admin {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string;
-  address: string;
+  birthDate: Date;
+  password: string;
   gender: "Male" | "Female";
-  totalLeave?: number;
 }

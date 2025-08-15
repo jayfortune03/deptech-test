@@ -5,41 +5,41 @@ import { CircularProgress, Stack, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-
+import {
+  fetchEmployeesFailure,
+  fetchEmployeesStart,
+  fetchEmployeesSuccess,
+  setPage,
+  setRowsPerPage,
+} from "@/app/store/employeeSlice";
 import axiosInstance from "@/app/lib/axios";
 import MenuButton from "../reload-button";
+import EmployeeTable from "../employee-table";
 import { RootState } from "@/app/store";
 import { useRouter } from "next/navigation";
-import AdminTable from "../admin-table";
-import {
-  fetchAdminsFailure,
-  fetchAdminsStart,
-  fetchAdminsSuccess,
-} from "@/app/store/adminSlice";
-import { setPage, setRowsPerPage } from "@/app/store/employeeSlice";
 
 export default function AdminPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { page, rowsPerPage, admins, totalAdmins, loading, error } =
-    useSelector((state: RootState) => state.admins);
+  const { page, rowsPerPage, employees, totalEmployees, loading, error } =
+    useSelector((state: RootState) => state.employees);
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(fetchAdminsStart());
+      dispatch(fetchEmployeesStart());
 
       try {
-        const response = await axiosInstance.get(`/admins`, {
+        const response = await axiosInstance.get(`/employees`, {
           params: {
             page,
             rowsPerPage,
           },
         });
 
-        dispatch(fetchAdminsSuccess(response.data.data));
+        dispatch(fetchEmployeesSuccess(response.data.data));
       } catch (err) {
         console.error("Error fetching data", err);
-        dispatch(fetchAdminsFailure("Failed to fetch employees"));
+        dispatch(fetchEmployeesFailure("Failed to fetch employees"));
       }
     };
 
@@ -60,7 +60,7 @@ export default function AdminPage() {
 
   const handleReload = () => {
     dispatch(setPage(1));
-    dispatch(fetchAdminsStart());
+    dispatch(fetchEmployeesStart());
     axiosInstance
       .get("/admins", {
         params: {
@@ -69,10 +69,10 @@ export default function AdminPage() {
         },
       })
       .then((response) => {
-        dispatch(fetchAdminsSuccess(response.data.data));
+        dispatch(fetchEmployeesSuccess(response.data.data));
       })
       .catch((error) => {
-        dispatch(fetchAdminsFailure("Failed to reload employees"));
+        dispatch(fetchEmployeesFailure("Failed to reload employees"));
         console.error("Error reloading data", error);
       });
   };
@@ -105,13 +105,13 @@ export default function AdminPage() {
         <CircularProgress />
       ) : error ? (
         <Typography>{error}</Typography>
-      ) : admins?.length > 0 ? (
+      ) : employees?.length > 0 ? (
         <>
-          <AdminTable
-            admins={admins}
-            error={error || ""}
-            totalAdmins={totalAdmins}
+          <EmployeeTable
+            employees={employees}
             loading={loading}
+            error={error || ""}
+            totalEmployees={totalEmployees}
             page={page}
             rowsPerPage={rowsPerPage}
             handleChangePage={handleChangePage}
@@ -119,7 +119,7 @@ export default function AdminPage() {
           />
         </>
       ) : (
-        <Typography>No admins found</Typography>
+        <Typography>No employees found</Typography>
       )}
     </>
   );
