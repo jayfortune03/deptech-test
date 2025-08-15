@@ -10,8 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AdminTableBodyProps } from "./types";
+import axiosInstance from "@/app/lib/axios";
 
 dayjs.locale("id");
 
@@ -23,6 +24,19 @@ export default function AdminTableBody({
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+
+  const [currentSession, setCurrentSession] = useState<Admin | null>(null);
+
+  useEffect(() => {
+    async function fetchCurrentSession() {
+      const response = await axiosInstance.get(`/auth/currentSession`, {});
+      if (response.data.data) {
+        setCurrentSession(response.data.data);
+      }
+    }
+
+    fetchCurrentSession();
+  }, []);
 
   const handleOpenEditDialog = (admin: Admin) => {
     setSelectedAdmin(admin);
@@ -103,16 +117,14 @@ export default function AdminTableBody({
 
                 <Button
                   onClick={() => handleOpenDeleteDialog(admin)}
-                  color="error"
+                  color="secondary"
+                  variant="outlined"
                   sx={{
-                    backgroundColor: "#e00e0eff",
                     color: "white",
-                    "&:hover": {
-                      backgroundColor: "#c20a0aff",
-                    },
                     padding: "6px 16px",
                     borderRadius: "4px",
                   }}
+                  disabled={currentSession?.id === admin.id}
                 >
                   Delete
                 </Button>

@@ -79,7 +79,7 @@ export class AdminController {
     if (loggedInUser?.id === id) {
       throw new HandleLeaveException(`You cannot delete yourself!`, 400);
     }
-    const data = [];
+    const data = await this.adminService.remove(id);
 
     return {
       status: 200,
