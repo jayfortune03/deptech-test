@@ -9,11 +9,15 @@ import {
   UseGuards,
   ParseIntPipe,
   Query,
+  Req,
+  NotFoundException,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard';
+import type { Request } from 'express';
+import { HandleLeaveException } from 'src/interceptors/handleLeave.interceptor';
 
 @Controller('admins')
 @UseGuards(JwtAuthGuard)
@@ -69,8 +73,13 @@ export class AdminController {
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    const data = await this.adminService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const loggedInUser = req?.user as { id: number };
+
+    if (loggedInUser?.id === id) {
+      throw new HandleLeaveException(`You cannot delete yourself!`, 400);
+    }
+    const data = [];
 
     return {
       status: 200,
