@@ -7,8 +7,9 @@
 3. configure env from example env (db name is employment-management). The rest is up to you.
 4. JWT_SECRET=inisangatrahasiahehehe
 5. `npx prisma migrate deploy`
-6. `yarn or npm seed`
-7. `yarn or npm start` to run server
+6. `npx prisma generate`
+7. `yarn or npm seed`
+8. `yarn or npm start` to run server
 
 Username untuk admin login :
 
