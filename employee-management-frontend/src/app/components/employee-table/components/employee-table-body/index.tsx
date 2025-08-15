@@ -6,35 +6,37 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { UserTableBodyProps } from "./types";
 import { useState } from "react";
-import { User } from "@/app/types/user";
-import EditUserDialog from "@/app/components/dialog-edit-user";
+import EditEmployeeDialog from "@/app/components/dialog-edit-employee";
+import { EmployeeTableBodyProps } from "./types";
+import { Employee } from "@/app/types/employee";
 
-export default function UserTableBody({
-  users,
+export default function EmployeeTableBody({
+  employees,
   page,
   rowsPerPage,
-}: UserTableBodyProps) {
+}: EmployeeTableBodyProps) {
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
 
-  const handleOpenEditDialog = (user: User) => {
-    setSelectedUser(user);
+  const handleOpenEditDialog = (employee: Employee) => {
+    setSelectedEmployee(employee);
     setOpenEditDialog(true);
   };
 
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
-    setSelectedUser(null);
+    setSelectedEmployee(null);
   };
 
   return (
     <>
       <TableBody>
-        {users.map((user, index) => (
+        {employees.map((employee, index) => (
           <TableRow
-            key={user.id}
+            key={employee.id}
             sx={{
               "&:hover": {
                 backgroundColor: "#f1f1f1",
@@ -47,22 +49,22 @@ export default function UserTableBody({
             </TableCell>
             <TableCell>
               <Typography variant="body1" sx={{ color: "#333" }}>
-                {user.name}
+                {employee.firstName} {employee.lastName}
               </Typography>
             </TableCell>
             <TableCell>
               <Typography variant="body1" sx={{ color: "#777" }}>
-                {user.totalAverageWeightRatings}
+                {employee.address}
               </Typography>
             </TableCell>
             <TableCell>
               <Typography variant="body1" sx={{ color: "#777" }}>
-                {user.numberOfRents}
+                {employee.phoneNumber}
               </Typography>
             </TableCell>
             <TableCell>
               <Typography variant="body1" sx={{ color: "#777" }}>
-                {user.recentlyActive}
+                {employee.gender}
               </Typography>
             </TableCell>
             <TableCell>
@@ -71,13 +73,13 @@ export default function UserTableBody({
                 arrow
               >
                 <Typography sx={{ color: "#00796b" }}>
-                  {user.totalScore}
+                  {employee.totalLeave ?? 0}
                 </Typography>
               </Tooltip>
             </TableCell>
             <TableCell>
               <Button
-                onClick={() => handleOpenEditDialog(user)}
+                onClick={() => handleOpenEditDialog(employee)}
                 color="primary"
                 sx={{
                   backgroundColor: "#00796b",
@@ -96,11 +98,11 @@ export default function UserTableBody({
         ))}
       </TableBody>
 
-      {selectedUser && (
-        <EditUserDialog
+      {selectedEmployee && (
+        <EditEmployeeDialog
           open={openEditDialog}
           onClose={handleCloseEditDialog}
-          user={selectedUser}
+          employee={selectedEmployee}
         />
       )}
     </>

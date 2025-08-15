@@ -1,12 +1,12 @@
-import { User } from "@/app/types/user";
+import { Employee } from "@/app/types/employee";
 
-export interface UserTableProps {
-  users: User[];
+export interface EmployeeTableProps {
+  employees: Employee[];
   loading: boolean;
   error: string;
   page: number;
   rowsPerPage: number;
-  totalUsers: number;
+  totalEmployees: number;
   handleChangePage: (event: unknown, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }

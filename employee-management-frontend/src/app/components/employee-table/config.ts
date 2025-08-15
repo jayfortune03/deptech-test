@@ -1,4 +1,4 @@
-export const userTableHeaders = [
+export const employeeTableHeader = [
   "Ranking",
   "Name",
   "Total Average Weight Rating",

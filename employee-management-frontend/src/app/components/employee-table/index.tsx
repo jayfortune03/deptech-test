@@ -11,20 +11,20 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import UserTableBody from "./components/user-table-body";
-import { userTableHeaders } from "./config";
-import { UserTableProps } from "./types";
+import EmployeeTableBody from "./components/employee-table-body";
+import { EmployeeTableProps } from "./types";
+import { employeeTableHeader } from "./config";
 
-export default function UserTable({
-  users,
+export default function EmployeeTable({
+  employees,
   loading,
   error,
   page,
   rowsPerPage,
-  totalUsers,
+  totalEmployees,
   handleChangePage,
   handleChangeRowsPerPage,
-}: UserTableProps) {
+}: EmployeeTableProps) {
   const isMobile = useMediaQuery("(max-width:600px)");
 
   return (
@@ -46,7 +46,7 @@ export default function UserTable({
         <Typography variant="h5" sx={{ color: "#d32f2f" }}>
           {error}
         </Typography>
-      ) : users.length > 0 ? (
+      ) : employees.length > 0 ? (
         <TableContainer sx={{ maxHeight: 400, marginTop: "2rem" }}>
           <Table sx={{}}>
             <TableHead
@@ -60,7 +60,7 @@ export default function UserTable({
               }}
             >
               <TableRow>
-                {userTableHeaders.map((el, idx) => {
+                {employeeTableHeader.map((el, idx) => {
                   return (
                     <TableCell key={idx} sx={{ padding: "8px 16px" }}>
                       {el}
@@ -70,23 +70,23 @@ export default function UserTable({
               </TableRow>
             </TableHead>
 
-            <UserTableBody
+            <EmployeeTableBody
               page={page}
               rowsPerPage={rowsPerPage}
-              users={users}
+              employees={employees}
             />
           </Table>
         </TableContainer>
       ) : (
         <Typography variant="h5" sx={{ color: "#00796b", marginTop: "2rem" }}>
-          No users found
+          No employees found
         </Typography>
       )}
 
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={totalUsers}
+        count={totalEmployees}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

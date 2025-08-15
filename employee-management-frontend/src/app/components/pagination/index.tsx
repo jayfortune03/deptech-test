@@ -9,6 +9,10 @@ export default function Pagination({
   handleChangePage,
   handleChangeRowsPerPage,
 }: PaginationProps) {
+  console.log(
+    `🥶🥶🥶🥶 ~ フ ク ロ ウ Pagination ~ フ ク ロ ウ rowsPerPage:`,
+    rowsPerPage
+  );
   return (
     <TablePagination
       rowsPerPageOptions={[5, 10, 25]}
