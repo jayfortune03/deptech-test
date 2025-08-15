@@ -41,7 +41,7 @@ export const validationSchemaRenderValue: {
   },
   {
     value: "password",
-    label: "New Password",
+    label: "Password",
   },
   {
     value: "gender",

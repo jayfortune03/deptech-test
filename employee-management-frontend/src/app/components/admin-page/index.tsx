@@ -4,7 +4,7 @@ import { CircularProgress, Stack, Typography } from "@mui/material";
 
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import axiosInstance from "@/app/lib/axios";
 import MenuButton from "../reload-button";
@@ -24,6 +24,18 @@ export default function AdminPage() {
   const { page, rowsPerPage, admins, totalAdmins, loading, error } =
     useSelector((state: RootState) => state.admins);
 
+  const handleLogout = useCallback(async () => {
+    try {
+      await axiosInstance.post("/auth/logout");
+      router.replace("/auth/login");
+    } catch (err) {
+      console.log(
+        "🥶🥶🥶🥶 ~ フ ク ロ ウ handleLogout ~ フ ク ロ ウ err:",
+        err
+      );
+    }
+  }, [router]);
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch(fetchAdminsStart());
@@ -40,23 +52,13 @@ export default function AdminPage() {
       } catch (err) {
         console.error("Error fetching data", err);
         dispatch(fetchAdminsFailure("Failed to fetch employees"));
+        alert("Session has expired. Please relog.");
+        await handleLogout();
       }
     };
 
     fetchData();
-  }, [dispatch, page, rowsPerPage]);
-
-  const handleLogout = async () => {
-    try {
-      await axiosInstance.post("/auth/logout");
-      router.replace("/auth/login");
-    } catch (err) {
-      console.log(
-        "🥶🥶🥶🥶 ~ フ ク ロ ウ handleLogout ~ フ ク ロ ウ err:",
-        err
-      );
-    }
-  };
+  }, [dispatch, handleLogout, page, rowsPerPage]);
 
   const handleReload = () => {
     dispatch(setPage(1));

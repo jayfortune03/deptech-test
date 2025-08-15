@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import AdminTableBody from "./components/admin-table-body";
 import { AdminTableProps } from "./types";
-import { employeeTableHeader } from "./config";
+import { adminTableHeader } from "./config";
 
 export default function AdminTable({
   admins,
@@ -60,7 +60,7 @@ export default function AdminTable({
               }}
             >
               <TableRow>
-                {employeeTableHeader.map((el, idx) => {
+                {adminTableHeader.map((el, idx) => {
                   return (
                     <TableCell key={idx} sx={{ padding: "8px 16px" }}>
                       {el}

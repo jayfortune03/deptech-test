@@ -3,6 +3,7 @@
 import axiosInstance from "@/app/lib/axios";
 import { RootState } from "@/app/store";
 
+import { fetchAdminsStart, fetchAdminsSuccess } from "@/app/store/adminSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
@@ -12,17 +13,12 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { validationSchema, validationSchemaRenderValue } from "./config";
 import { EditAdminDialogProps } from "./types";
-import { useEffect } from "react";
-import {
-  fetchAdminsFailure,
-  fetchAdminsStart,
-  fetchAdminsSuccess,
-} from "@/app/store/adminSlice";
 
 export default function EditAdminDialog({
   open,
@@ -72,10 +68,12 @@ export default function EditAdminDialog({
       });
       dispatch(fetchAdminsSuccess(adminsResponse.data.data));
 
-      onClose();
+      alert(`Success Edit Admin ${data.firstName} ${data.lastName}`);
     } catch (error) {
       console.error("Error updating admin data", error);
-      dispatch(fetchAdminsFailure("Failed to update admin"));
+      alert(`Error Edit Admin ${data.firstName} ${data.lastName}`);
+    } finally {
+      onClose();
     }
   };
 

@@ -1,7 +1,9 @@
+import DialogDeleteAdmin from "@/app/components/dialog-delete-admin";
 import EditAdminDialog from "@/app/components/dialog-edit-admin";
 import { Admin } from "@/app/types/admin";
 import {
   Button,
+  Stack,
   TableBody,
   TableCell,
   TableRow,
@@ -19,14 +21,27 @@ export default function AdminTableBody({
   rowsPerPage,
 }: AdminTableBodyProps) {
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
 
   const handleOpenEditDialog = (admin: Admin) => {
     setSelectedAdmin(admin);
     setOpenEditDialog(true);
+    setOpenDeleteDialog(false);
+  };
+
+  const handleOpenDeleteDialog = (admin: Admin) => {
+    setSelectedAdmin(admin);
+    setOpenDeleteDialog(true);
+    setOpenEditDialog(false);
   };
 
   const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+    setSelectedAdmin(null);
+  };
+
+  const handleCloseDeleteDialog = () => {
     setOpenEditDialog(false);
     setSelectedAdmin(null);
   };
@@ -44,41 +59,64 @@ export default function AdminTableBody({
               backgroundColor: index % 2 === 0 ? "#fafafa" : "white",
             }}
           >
-            <TableCell sx={{ fontWeight: "bold" }}>
-              {page * rowsPerPage + index + 1}
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              {(page - 1) * rowsPerPage + index + 1}
             </TableCell>
-            <TableCell>
+            <TableCell align="center">
               <Typography variant="body1" sx={{ color: "#333" }}>
-                {admin.firstName} {admin.lastName}
+                {admin.firstName}
               </Typography>
             </TableCell>
-            <TableCell>
+            <TableCell align="center">
+              <Typography variant="body1" sx={{ color: "#333" }}>
+                {admin.lastName}
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
               <Typography variant="body1" sx={{ color: "#777" }}>
                 {dayjs(admin.birthDate).format("DD-MM-YYYY")}
               </Typography>
             </TableCell>
 
-            <TableCell>
+            <TableCell align="center">
               <Typography variant="body1" sx={{ color: "#777" }}>
                 {admin.gender}
               </Typography>
             </TableCell>
             <TableCell>
-              <Button
-                onClick={() => handleOpenEditDialog(admin)}
-                color="primary"
-                sx={{
-                  backgroundColor: "#00796b",
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: "#004d40",
-                  },
-                  padding: "6px 16px",
-                  borderRadius: "4px",
-                }}
-              >
-                Edit
-              </Button>
+              <Stack direction="row" justifyContent={"center"} gap={2}>
+                <Button
+                  onClick={() => handleOpenEditDialog(admin)}
+                  color="primary"
+                  sx={{
+                    backgroundColor: "#00796b",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#004d40",
+                    },
+                    padding: "6px 16px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  Edit
+                </Button>
+
+                <Button
+                  onClick={() => handleOpenDeleteDialog(admin)}
+                  color="error"
+                  sx={{
+                    backgroundColor: "#e00e0eff",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#c20a0aff",
+                    },
+                    padding: "6px 16px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  Delete
+                </Button>
+              </Stack>
             </TableCell>
           </TableRow>
         ))}
@@ -88,6 +126,14 @@ export default function AdminTableBody({
         <EditAdminDialog
           open={openEditDialog}
           onClose={handleCloseEditDialog}
+          admin={selectedAdmin}
+        />
+      )}
+
+      {selectedAdmin && (
+        <DialogDeleteAdmin
+          open={openDeleteDialog}
+          onClose={handleCloseDeleteDialog}
           admin={selectedAdmin}
         />
       )}
