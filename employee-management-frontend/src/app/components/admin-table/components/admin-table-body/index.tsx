@@ -74,7 +74,8 @@ export default function AdminTableBody({
             }}
           >
             <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              {(page - 1) * rowsPerPage + index + 1}
+              {(page - 1) * rowsPerPage + index + 1}{" "}
+              {currentSession?.id === admin.id ? "(YOU)" : ""}
             </TableCell>
             <TableCell align="center">
               <Typography variant="body1" sx={{ color: "#333" }}>
@@ -120,6 +121,7 @@ export default function AdminTableBody({
                   color="secondary"
                   variant="outlined"
                   sx={{
+                    backgroundColor: "#e60f0fff",
                     color: "white",
                     padding: "6px 16px",
                     borderRadius: "4px",

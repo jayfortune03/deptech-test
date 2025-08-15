@@ -4,7 +4,7 @@ import { CircularProgress, Stack, Typography } from "@mui/material";
 
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import axiosInstance from "@/app/lib/axios";
 import MenuButton from "../reload-button";
@@ -17,12 +17,22 @@ import {
   fetchAdminsSuccess,
 } from "@/app/store/adminSlice";
 import { setPage, setRowsPerPage } from "@/app/store/employeeSlice";
+import CreateAdminDialog from "../dialog-create-admin";
 
 export default function AdminPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { page, rowsPerPage, admins, totalAdmins, loading, error } =
     useSelector((state: RootState) => state.admins);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+
+  const handleCloseCreateDialog = () => {
+    setOpenCreateDialog(false);
+  };
+
+  const handleOpenCreateDialog = () => {
+    setOpenCreateDialog(true);
+  };
 
   const handleLogout = useCallback(async () => {
     try {
@@ -92,6 +102,11 @@ export default function AdminPage() {
 
   return (
     <>
+      <CreateAdminDialog
+        open={openCreateDialog}
+        onClose={handleCloseCreateDialog}
+      />
+
       <Stack
         display={"flex"}
         direction={"row"}
@@ -100,7 +115,11 @@ export default function AdminPage() {
       >
         <Typography variant="h4">Admins List</Typography>
 
-        <MenuButton handleLogout={handleLogout} handleReload={handleReload} />
+        <MenuButton
+          handleLogout={handleLogout}
+          handleReload={handleReload}
+          handleCreate={handleOpenCreateDialog}
+        />
       </Stack>
 
       {loading ? (
