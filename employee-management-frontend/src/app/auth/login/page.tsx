@@ -30,19 +30,19 @@ export default function LoginPage() {
 
   const isMobile = useMediaQuery("(max-width:600px)");
 
-  const handleLogin = async (data: { username: string; password: string }) => {
+  const handleLogin = async (data: { email: string; password: string }) => {
     setLoading(true);
     setError("");
 
     try {
       await axiosInstance.post("/auth/login", {
-        userName: data.username,
+        email: data.email,
         password: data.password,
       });
 
       router.replace("/");
     } catch {
-      setError("Invalid username or password");
+      setError("Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -115,17 +115,17 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit(handleLogin)} style={{ width: "100%" }}>
             <Controller
-              name="username"
+              name="email"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   fullWidth
-                  label="Username"
+                  label="Email"
                   variant="outlined"
                   margin="normal"
-                  error={!!errors.username}
-                  helperText={errors.username?.message}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
                   required
                   sx={{
                     marginBottom: 2,
