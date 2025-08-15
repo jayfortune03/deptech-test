@@ -1,6 +1,9 @@
 import axiosInstance from "@/app/lib/axios";
-import { fetchAdminsStart, fetchAdminsSuccess } from "@/app/store/adminSlice";
-import { Admin } from "@/app/types/admin";
+import {
+  fetchEmployeesStart,
+  fetchEmployeesSuccess,
+} from "@/app/store/employeeSlice";
+import { Employee } from "@/app/types/employee";
 import {
   Button,
   Dialog,
@@ -11,26 +14,33 @@ import {
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
-export default function DialogDeleteAdmin({
+export default function DialogDeleteEmployee({
   open,
   onClose,
-  admin,
+  employee,
 }: {
   open: boolean;
   onClose: () => void;
-  admin: Admin;
+  employee: Employee;
 }) {
   const dispatch = useDispatch();
 
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`/admins/${admin.id}`);
+      await axiosInstance.delete(`/employees/${employee.id}`);
 
-      dispatch(fetchAdminsStart());
-      const adminsResponse = await axiosInstance.get(`/admins`);
-      dispatch(fetchAdminsSuccess(adminsResponse.data.data));
+      dispatch(fetchEmployeesStart());
+      const employeesResponse = await axiosInstance.get(`/employees`, {
+        params: {
+          page: 1,
+          rowsPerPage: 5,
+        },
+      });
+      dispatch(fetchEmployeesSuccess(employeesResponse.data.data));
 
-      alert(`Success delete admin ${admin.firstName} ${admin.lastName}`);
+      alert(
+        `Success delete employee ${employee.firstName} ${employee.lastName}`
+      );
     } catch (error) {
       if (axios.isAxiosError(error) && error.status === 400) {
         alert("You cannot delete yourself!");
@@ -52,8 +62,8 @@ export default function DialogDeleteAdmin({
         }}
       >
         <p>
-          Are you sure you want to delete the admin {admin.firstName}{" "}
-          {admin.lastName}?
+          Are you sure you want to delete the employee {employee.firstName}{" "}
+          {employee.lastName}?
         </p>
       </DialogContent>
       <DialogActions

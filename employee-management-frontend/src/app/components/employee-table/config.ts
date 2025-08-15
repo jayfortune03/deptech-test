@@ -1,9 +1,10 @@
 export const employeeTableHeader = [
-  "Ranking",
-  "Name",
-  "Total Average Weight Rating",
-  "Number Of Rents",
-  "Recently Active",
-  "Total Score",
+  "No",
+  "First Name",
+  "Last Name",
+  "Email",
+  "Phone Number",
+  "Address",
+  "Gender",
   "Actions",
 ];

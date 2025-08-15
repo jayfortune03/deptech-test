@@ -3,7 +3,10 @@
 import axiosInstance from "@/app/lib/axios";
 import { RootState } from "@/app/store";
 
-import { fetchAdminsStart, fetchAdminsSuccess } from "@/app/store/adminSlice";
+import {
+  fetchEmployeesStart,
+  fetchEmployeesSuccess,
+} from "@/app/store/employeeSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
@@ -16,26 +19,24 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Stack,
   TextField,
 } from "@mui/material";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { validationSchema, validationSchemaRenderValue } from "./config";
-import { CreateAdminDialogProps } from "./types";
+import { CreateEmployeeProps } from "./types";
 
-export default function CreateAdminDialog({
+export default function CreateEmployeeDialog({
   open,
   onClose,
-}: CreateAdminDialogProps) {
+}: CreateEmployeeProps) {
   const dispatch = useDispatch();
 
-  const { page, rowsPerPage } = useSelector((state: RootState) => state.admins);
+  const { page, rowsPerPage } = useSelector(
+    (state: RootState) => state.employees
+  );
 
   const {
     control,
@@ -48,8 +49,8 @@ export default function CreateAdminDialog({
       firstName: "",
       lastName: "",
       email: "",
-      birthDate: new Date(),
-      password: "",
+      phoneNumber: "",
+      address: "",
       gender: "Female",
     },
   });
@@ -59,27 +60,27 @@ export default function CreateAdminDialog({
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-      birthDate: data.birthDate,
-      password: data.password,
+      phoneNumber: data.phoneNumber,
+      address: data.address,
       gender: data.gender,
     };
 
     try {
-      await axiosInstance.post(`/admins`, userPayload);
+      await axiosInstance.post(`/employees`, userPayload);
 
-      dispatch(fetchAdminsStart());
-      const adminsResponse = await axiosInstance.get(`/admins`, {
+      dispatch(fetchEmployeesStart());
+      const employeesResponse = await axiosInstance.get(`/employees`, {
         params: {
           page,
           rowsPerPage,
         },
       });
-      dispatch(fetchAdminsSuccess(adminsResponse.data.data));
+      dispatch(fetchEmployeesSuccess(employeesResponse.data.data));
 
-      alert(`Success create Admin ${data.firstName} ${data.lastName}`);
+      alert(`Success create Employee ${data.firstName} ${data.lastName}`);
     } catch (error) {
-      console.error("Error updating admin data", error);
-      alert(`Error create Admin ${data.firstName} ${data.lastName}`);
+      console.error("Error updating Employee data", error);
+      alert(`Error create Employee ${data.firstName} ${data.lastName}`);
     } finally {
       onClose();
     }
@@ -91,8 +92,8 @@ export default function CreateAdminDialog({
         firstName: "",
         lastName: "",
         email: "",
-        birthDate: new Date(),
-        password: "",
+        phoneNumber: "",
+        address: "",
         gender: "Female",
       });
     }
@@ -101,7 +102,7 @@ export default function CreateAdminDialog({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle sx={{ backgroundColor: "#00796b", color: "white" }}>
-        Create Admin
+        Create Employee
       </DialogTitle>
       <DialogContent
         sx={{
@@ -137,56 +138,6 @@ export default function CreateAdminDialog({
               );
             }
 
-            if (el.value === "password") {
-              return (
-                <Controller
-                  key={el.value}
-                  name={el.value}
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label={el.label}
-                      fullWidth
-                      type="password"
-                      margin="normal"
-                      error={!!errors[el.value]}
-                      helperText={errors[el.value]?.message}
-                      sx={{
-                        backgroundColor: "white",
-                        borderRadius: "4px",
-                      }}
-                    />
-                  )}
-                />
-              );
-            }
-
-            if (el.value === "birthDate") {
-              return (
-                <Controller
-                  key={el.value}
-                  name={el.value}
-                  control={control}
-                  render={({ field }) => (
-                    <Stack my={0.5}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
-                          {...field}
-                          label={el.label}
-                          slotProps={{
-                            textField: {
-                              placeholder: "Pilih tanggal",
-                              fullWidth: true,
-                            },
-                          }}
-                        />
-                      </LocalizationProvider>
-                    </Stack>
-                  )}
-                />
-              );
-            }
             return (
               <Controller
                 key={el.value}

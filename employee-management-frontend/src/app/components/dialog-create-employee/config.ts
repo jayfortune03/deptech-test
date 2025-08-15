@@ -6,8 +6,8 @@ export const validationSchema = Yup.object({
   email: Yup.string()
     .email("Email address is invalid!")
     .required("Email is required!"),
-  birthDate: Yup.date().required("Birth date is required!"),
-  password: Yup.string().required("Password is required!"),
+  phoneNumber: Yup.string().required("Phone Number is required!"),
+  address: Yup.string().required("Address is required"),
   gender: Yup.string()
     .oneOf(["Male", "Female"], "Invalid gender!")
     .required("Gender is required!"),
@@ -19,8 +19,8 @@ export const validationSchemaRenderValue: {
     | "firstName"
     | "lastName"
     | "email"
-    | "birthDate"
-    | "password"
+    | "phoneNumber"
+    | "address"
     | "gender";
 }[] = [
   {
@@ -36,12 +36,12 @@ export const validationSchemaRenderValue: {
     label: "Email",
   },
   {
-    value: "birthDate",
-    label: "Birth Date",
+    value: "phoneNumber",
+    label: "Phone Number",
   },
   {
-    value: "password",
-    label: "Password",
+    value: "address",
+    label: "Address",
   },
   {
     value: "gender",

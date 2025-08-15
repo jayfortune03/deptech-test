@@ -1,15 +1,16 @@
+import EditEmployeeDialog from "@/app/components/dialog-edit-employee";
+import { Employee } from "@/app/types/employee";
 import {
   Button,
+  Stack,
   TableBody,
   TableCell,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import EditEmployeeDialog from "@/app/components/dialog-edit-employee";
 import { EmployeeTableBodyProps } from "./types";
-import { Employee } from "@/app/types/employee";
+import DialogDeleteEmployee from "@/app/components/dialog-delete-employee";
 
 export default function EmployeeTableBody({
   employees,
@@ -17,6 +18,7 @@ export default function EmployeeTableBody({
   rowsPerPage,
 }: EmployeeTableBodyProps) {
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
@@ -24,9 +26,21 @@ export default function EmployeeTableBody({
   const handleOpenEditDialog = (employee: Employee) => {
     setSelectedEmployee(employee);
     setOpenEditDialog(true);
+    setOpenDeleteDialog(false);
   };
 
   const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+    setSelectedEmployee(null);
+  };
+
+  const handleOpenDeleteDialog = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setOpenDeleteDialog(true);
+    setOpenEditDialog(false);
+  };
+
+  const handleCloseDeleteDialog = () => {
     setOpenEditDialog(false);
     setSelectedEmployee(null);
   };
@@ -45,16 +59,21 @@ export default function EmployeeTableBody({
             }}
           >
             <TableCell sx={{ fontWeight: "bold" }}>
-              {page * rowsPerPage + index + 1}
+              {(page - 1) * rowsPerPage + index + 1}
             </TableCell>
             <TableCell>
               <Typography variant="body1" sx={{ color: "#333" }}>
-                {employee.firstName} {employee.lastName}
+                {employee.firstName}
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="body1" sx={{ color: "#777" }}>
-                {employee.address}
+              <Typography variant="body1" sx={{ color: "#333" }}>
+                {employee.lastName}
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="body1" sx={{ color: "#333" }}>
+                {employee.email}
               </Typography>
             </TableCell>
             <TableCell>
@@ -64,35 +83,48 @@ export default function EmployeeTableBody({
             </TableCell>
             <TableCell>
               <Typography variant="body1" sx={{ color: "#777" }}>
+                {employee.address}
+              </Typography>
+            </TableCell>
+
+            <TableCell>
+              <Typography variant="body1" sx={{ color: "#777" }}>
                 {employee.gender}
               </Typography>
             </TableCell>
+
             <TableCell>
-              <Tooltip
-                title={`Total score counted with this formula : totalAverageWeightRatings * 1000000 + numberOfRents * 1000 + recentlyActive`}
-                arrow
-              >
-                <Typography sx={{ color: "#00796b" }}>
-                  {employee.totalLeave ?? 0}
-                </Typography>
-              </Tooltip>
-            </TableCell>
-            <TableCell>
-              <Button
-                onClick={() => handleOpenEditDialog(employee)}
-                color="primary"
-                sx={{
-                  backgroundColor: "#00796b",
-                  color: "white",
-                  "&:hover": {
-                    backgroundColor: "#004d40",
-                  },
-                  padding: "6px 16px",
-                  borderRadius: "4px",
-                }}
-              >
-                Edit
-              </Button>
+              <Stack direction="row" justifyContent={"center"} gap={2}>
+                <Button
+                  onClick={() => handleOpenEditDialog(employee)}
+                  color="primary"
+                  sx={{
+                    backgroundColor: "#00796b",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#004d40",
+                    },
+                    padding: "6px 16px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  Edit
+                </Button>
+
+                <Button
+                  onClick={() => handleOpenDeleteDialog(employee)}
+                  color="secondary"
+                  variant="outlined"
+                  sx={{
+                    backgroundColor: "#e60f0fff",
+                    color: "white",
+                    padding: "6px 16px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  Delete
+                </Button>
+              </Stack>
             </TableCell>
           </TableRow>
         ))}
@@ -102,6 +134,14 @@ export default function EmployeeTableBody({
         <EditEmployeeDialog
           open={openEditDialog}
           onClose={handleCloseEditDialog}
+          employee={selectedEmployee}
+        />
+      )}
+
+      {selectedEmployee && (
+        <DialogDeleteEmployee
+          open={openDeleteDialog}
+          onClose={handleCloseDeleteDialog}
           employee={selectedEmployee}
         />
       )}

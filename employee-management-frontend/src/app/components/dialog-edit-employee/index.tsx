@@ -62,21 +62,15 @@ export default function EditUserDialog({
     };
 
     try {
-      await axiosInstance.put(
-        `/auth/update-employee-data/${employee.id}`,
-        updatedUser
-      );
+      await axiosInstance.patch(`/employees/${employee.id}`, updatedUser);
 
       dispatch(fetchEmployeesStart());
-      const employeesResponse = await axiosInstance.get(
-        `/auth/fetch-employee-data`,
-        {
-          params: {
-            page,
-            rowsPerPage,
-          },
-        }
-      );
+      const employeesResponse = await axiosInstance.get(`/employees`, {
+        params: {
+          page,
+          rowsPerPage,
+        },
+      });
       dispatch(fetchEmployeesSuccess(employeesResponse.data.data));
 
       onClose();

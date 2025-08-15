@@ -88,6 +88,11 @@ export default function AdminTableBody({
               </Typography>
             </TableCell>
             <TableCell align="center">
+              <Typography variant="body1" sx={{ color: "#333" }}>
+                {admin.email}
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
               <Typography variant="body1" sx={{ color: "#777" }}>
                 {dayjs(admin.birthDate).format("DD-MM-YYYY")}
               </Typography>

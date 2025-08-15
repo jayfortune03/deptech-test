@@ -27,7 +27,12 @@ export default function DialogDeleteAdmin({
       await axiosInstance.delete(`/admins/${admin.id}`);
 
       dispatch(fetchAdminsStart());
-      const adminsResponse = await axiosInstance.get(`/admins`);
+      const adminsResponse = await axiosInstance.get(`/admins`, {
+        params: {
+          page: 1,
+          rowsPerPage: 5,
+        },
+      });
       dispatch(fetchAdminsSuccess(adminsResponse.data.data));
 
       alert(`Success delete admin ${admin.firstName} ${admin.lastName}`);

@@ -1,4 +1,4 @@
-export interface CreateAdminDialogProps {
+export interface CreateEmployeeProps {
   open: boolean;
   onClose: () => void;
 }
